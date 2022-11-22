@@ -3,9 +3,11 @@ import { sidebarAPI } from "../../../api/sidebarAPI";
 
 const HeaderSidebarManagement = ({
   inputEl,
+  inputChildEl,
   updateInputEl,
   updateNode,
   createNode,
+  addNodeChild,
   expandAll,
   collapseAll,
   searchString,
@@ -17,14 +19,17 @@ const HeaderSidebarManagement = ({
   treeData,
   selectedSideBar,
   fetchSidebars,
+  treeDataUpdate,
   treeDataUpdateAll,
   treeDataUpdateNode,
   treeDataAddNode,
+  treeDataAddNodeChild,
   treeDataRemoveNode,
 }) => {
   const [updateSidebar, setUpdateSidebar] = useState(selectedSideBar); //rowInfo
   const [input, setInput] = useState("");
   const [originalDataAll, setOriginalDataAll] = useState([]);
+  const [originalDataUpdate, setOriginalDataUpdate] = useState([]);
 
   useEffect(() => {
     setUpdateSidebar(selectedSideBar);
@@ -34,23 +39,19 @@ const HeaderSidebarManagement = ({
   useEffect(() => {
     setOriginalDataAll(deParseData(treeDataUpdateAll, []));
   }, [treeDataUpdateAll]);
-  const callbackUpdateNode = useCallback(async () => {
-    const nodeUpdate = {
-      title: treeDataUpdateNode.title,
-      expanded: treeDataUpdateNode.expanded,
-      parentId: treeDataUpdateNode.parentId,
-      id: treeDataUpdateNode.id,
-      count: treeDataUpdateNode.count,
-    };
-    await sidebarAPI
-      .updateSidebar(nodeUpdate.id, nodeUpdate)
-      .then((msgSuccess) => fetchSidebars())
-      .catch((error) => console.log("error", error));
-  }, [treeDataUpdateNode]);
+
+  // useEffect(() => {
+  //   setOriginalDataUpdate(deParseData(treeDataUpdate, []));
+  // }, [treeDataUpdate]);
+
   //  Add Node
   useEffect(() => {
     callbackAddNode();
   }, [treeDataAddNode]);
+  // Add Child Node
+  useEffect(() => {
+    callbackAddNodeChild();
+  }, [treeDataAddNodeChild]);
   // Update Node
   useEffect(() => {
     callbackUpdateNode();
@@ -92,6 +93,22 @@ const HeaderSidebarManagement = ({
 
     console.log("mockApiIds", mockApiIds);
   };
+
+  // const handleSaving = async () => {
+  //   const mockApiSideBars = await sidebarAPI.getSidebars();
+  //   const mockApiIds = mockApiSideBars.data.map((e) => e.id);
+  //   // Update sidebars
+  //   Promise.all(
+  //     originalDataUpdate
+  //       .filter((e) => mockApiIds.includes(e.id))
+  //       .map(async (e) => await sidebarAPI.updateSidebar(e.id, e))
+  //   )
+  //     .then((msgSuccess) => fetchSidebars())
+  //     .catch((error) => console.log("error", error));
+
+  //   console.log("mockApiIds", mockApiIds);
+  // };
+
   const callbackAddNode = useCallback(async () => {
     Promise.all(
       treeDataAddNode.map(async (e) => await sidebarAPI.addSidebar(e))
@@ -100,11 +117,35 @@ const HeaderSidebarManagement = ({
       .catch((error) => console.log("error", error));
   }, [treeDataAddNode]);
 
+  const callbackAddNodeChild = useCallback(async () => {
+    Promise.all(
+      treeDataAddNodeChild.map(async (e) => await sidebarAPI.addSidebar(e))
+    )
+      .then((msgSuccess) => fetchSidebars())
+      .catch((error) => console.log("error", error));
+  }, [treeDataAddNodeChild]);
+
+  const addNodeChildHandler = async () => {};
+
   const updateHandler = async () => {
     if (updateSidebar) {
       updateNode(updateSidebar, input);
     }
   };
+
+  const callbackUpdateNode = useCallback(async () => {
+    const nodeUpdate = {
+      title: treeDataUpdateNode.title,
+      expanded: treeDataUpdateNode.expanded,
+      parentId: treeDataUpdateNode.parentId,
+      id: treeDataUpdateNode.id,
+      count: treeDataUpdateNode.count,
+    };
+    await sidebarAPI
+      .updateSidebar(nodeUpdate.id, nodeUpdate)
+      .then((msgSuccess) => fetchSidebars())
+      .catch((error) => console.log("error", error));
+  }, [treeDataUpdateNode]);
 
   const callbackRemoveNode = useCallback(async () => {
     Promise.all(
@@ -119,35 +160,51 @@ const HeaderSidebarManagement = ({
       <h3 className="text-3xl font-medium text-center mb-5">
         Sidebar Management
       </h3>
-      <div className="flex mb-2">
-        <button
-          className="p-2 px-3 m-2 bg-gray-200 rounded-md hover:bg-gray-400 transition-primary"
-          onClick={createNode}
-        >
-          Create Node
-        </button>
-        <input
-          className="border p-2 rounded-md transition-primary"
-          ref={inputEl}
-          type="text"
-        />
-        <br />
-      </div>
-      <div className="flex">
-        <button
-          className="p-2 m-2 bg-gray-200 rounded-md hover:bg-gray-400 transition-primary"
-          onClick={updateHandler}
-        >
-          Update Node
-        </button>
-        <input
-          className="border p-2 rounded-md transition-primary"
-          ref={updateInputEl}
-          type="text"
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-        />
-        <br />
+      <div className="grid grid-cols-2">
+        <div className="flex mb-2">
+          <button
+            className="p-2 px-3 m-2 bg-gray-200 rounded-md hover:bg-gray-400 transition-primary"
+            onClick={createNode}
+          >
+            Create Node
+          </button>
+          <input
+            className="border p-2 rounded-md transition-primary"
+            ref={inputEl}
+            type="text"
+          />
+          <br />
+        </div>
+        <div className="flex mb-2">
+          <button
+            className="p-2 px-3 m-2 bg-gray-200 rounded-md hover:bg-gray-400 transition-primary"
+            onClick={addNodeChild}
+          >
+            Add Node Child
+          </button>
+          <input
+            className="border p-2 rounded-md transition-primary"
+            ref={inputChildEl}
+            type="text"
+          />
+          <br />
+        </div>
+        <div className="flex">
+          <button
+            className="p-2 m-2 bg-gray-200 rounded-md hover:bg-gray-400 transition-primary"
+            onClick={updateHandler}
+          >
+            Update Node
+          </button>
+          <input
+            className="border p-2 rounded-md transition-primary"
+            ref={updateInputEl}
+            type="text"
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+          />
+          <br />
+        </div>
       </div>
       <br />
       <button

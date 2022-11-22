@@ -60,7 +60,7 @@ const SidebarMain = ({ data, fetchSidebars }) => {
 
   return (
     <div className="fixed flex mt-15 h-full">
-      <Sidebar width="300px" collapsedWidth="80px">
+      <Sidebar onScroll={false} width="300px" collapsedWidth="80px">
         <div className="text-xl font-medium text-center mt-20">Sidebar</div>
         <div className="mx-8  left-10 z-10">
           <button onClick={() => collapseSidebar()}>
@@ -68,14 +68,18 @@ const SidebarMain = ({ data, fetchSidebars }) => {
           </button>
         </div>
 
-        <Menu className="overflow-y-scroll  h-[65%]">
-          <MenuItem routerLink={<Link to="/" />} icon={<FiHome />}>
+        <Menu className="transition-primary">
+          <MenuItem
+            className="visited:bg-red-400"
+            routerLink={<Link to="/" />}
+            icon={<FiHome />}
+          >
             Trang chủ
           </MenuItem>
           {renderSidebar(treeData)}
         </Menu>
       </Sidebar>
-      <Menu className="absolute bottom-0 w-full bg-zinc-200 z-10">
+      {/* <Menu className="absolute bottom-0 w-full bg-zinc-200 z-10">
         <SubMenu
           className=""
           label={
@@ -100,7 +104,7 @@ const SidebarMain = ({ data, fetchSidebars }) => {
         <MenuItem icon={<FiPhoneCall />}> Liên hệ </MenuItem>
 
         <MenuItem icon={<FiLogOut />}>Logout</MenuItem>
-      </Menu>
+      </Menu> */}
     </div>
   );
 };
