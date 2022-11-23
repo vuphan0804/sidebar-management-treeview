@@ -60,7 +60,7 @@ const SidebarMain = ({ data, fetchSidebars }) => {
 
   return (
     <div className="fixed flex mt-15 h-full">
-      <Sidebar onScroll={false} width="300px" collapsedWidth="80px">
+      <Sidebar width="300px" collapsedWidth="80px">
         <div className="text-xl font-medium text-center mt-20">Sidebar</div>
         <div className="mx-8  left-10 z-10">
           <button onClick={() => collapseSidebar()}>

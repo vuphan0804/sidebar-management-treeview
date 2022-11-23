@@ -17,7 +17,7 @@ const HeaderSidebarManagement = ({
   selectPrevMatch,
   searchFocusIndex,
   treeData,
-  selectedSideBar,
+  selectedSidebar,
   fetchSidebars,
   treeDataUpdate,
   treeDataUpdateAll,
@@ -25,16 +25,24 @@ const HeaderSidebarManagement = ({
   treeDataAddNode,
   treeDataAddNodeChild,
   treeDataRemoveNode,
+  selectedNodeParent,
 }) => {
-  const [updateSidebar, setUpdateSidebar] = useState(selectedSideBar); //rowInfo
+  const [updateSidebar, setUpdateSidebar] = useState(selectedSidebar); //rowInfo
   const [input, setInput] = useState("");
   const [originalDataAll, setOriginalDataAll] = useState([]);
-  const [originalDataUpdate, setOriginalDataUpdate] = useState([]);
+  // const [originalDataUpdate, setOriginalDataUpdate] = useState([]);
+  const [addNodeChildSidebar, setAddNodeChildSidebar] =
+    useState(selectedNodeParent);
+  const [inputAddNodeChild, setInputAddNodeChild] = useState("");
 
   useEffect(() => {
-    setUpdateSidebar(selectedSideBar);
-    setInput(selectedSideBar?.node?.title || "");
-  }, [selectedSideBar]);
+    setUpdateSidebar(selectedSidebar);
+    setInput(selectedSidebar?.node?.title || "");
+  }, [selectedSidebar]);
+
+  useEffect(() => {
+    setAddNodeChildSidebar(selectedNodeParent);
+  }, [selectedNodeParent]);
 
   useEffect(() => {
     setOriginalDataAll(deParseData(treeDataUpdateAll, []));
@@ -48,7 +56,7 @@ const HeaderSidebarManagement = ({
   useEffect(() => {
     callbackAddNode();
   }, [treeDataAddNode]);
-  // Add Child Node
+  // Add Node Child
   useEffect(() => {
     callbackAddNodeChild();
   }, [treeDataAddNodeChild]);
@@ -117,6 +125,22 @@ const HeaderSidebarManagement = ({
       .catch((error) => console.log("error", error));
   }, [treeDataAddNode]);
 
+  // const callbackAddNodeChild = useCallback(async () => {
+  //   const value = inputChildEl.current.value;
+  //   const addNodeChildNew = {
+  //     title: value,
+  //     expanded: true,
+  //     parentId: treeDataAddNodeChild.node.id,
+  //     id: "",
+  //     count: "",
+  //   };
+  //   await sidebarAPI
+  //     .addSidebar(addNodeChildNew)
+  //     .then((msgSuccess) => fetchSidebars())
+  //     .catch((error) => console.log("error", error));
+  // }, [treeDataAddNodeChild]);
+  // console.log("treeDataAddNodeChild", treeDataAddNodeChild);
+
   const callbackAddNodeChild = useCallback(async () => {
     Promise.all(
       treeDataAddNodeChild.map(async (e) => await sidebarAPI.addSidebar(e))
@@ -125,7 +149,11 @@ const HeaderSidebarManagement = ({
       .catch((error) => console.log("error", error));
   }, [treeDataAddNodeChild]);
 
-  const addNodeChildHandler = async () => {};
+  const addNodeChildHandler = async () => {
+    if (addNodeChildSidebar) {
+      addNodeChild(addNodeChildSidebar, inputAddNodeChild);
+    }
+  };
 
   const updateHandler = async () => {
     if (updateSidebar) {
@@ -186,6 +214,8 @@ const HeaderSidebarManagement = ({
             className="border p-2 rounded-md transition-primary"
             ref={inputChildEl}
             type="text"
+            // value={inputAddNodeChild}
+            // onChange={(e) => setInputAddNodeChild(e.target.value)}
           />
           <br />
         </div>

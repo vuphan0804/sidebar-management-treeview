@@ -21,7 +21,7 @@ const Tree = ({ data, fetchSidebars }) => {
   const [isOpenFormDelete, setIsOpenFormDelete] = useState(false);
   const [isOpenPopupInfo, setIsOpenPopupInfo] = useState(false);
   const [treeData, setTreeData] = useState([]);
-  const [selectedSideBar, setSelectedSideBar] = useState(); // selected sidebar id to be updated
+  const [selectedSidebar, setSelectedSidebar] = useState(); // selected sidebar id to be updated
   const [isLoading, setIsLoading] = useState(true);
   const [treeDataUpdate, setTreeDataUpdate] = useState([]);
   const [treeDataUpdateAll, setTreeDataUpdateAll] = useState([]);
@@ -30,6 +30,7 @@ const Tree = ({ data, fetchSidebars }) => {
   const [treeDataAddNodeChild, setTreeDataAddNodeChild] = useState([]);
   const [treeDataRemoveNode, setTreeDataRemoveNode] = useState([]);
   const [rowInfoDelete, setRowInfoDelete] = useState([]);
+  const [selectedNodeParent, setSelectedNodeParent] = useState([]);
 
   const inputEl = useRef();
   const updateInputEl = useRef();
@@ -109,8 +110,11 @@ const Tree = ({ data, fetchSidebars }) => {
     if (!rowInfo) return;
 
     const { node, path } = rowInfo;
-    setSelectedSideBar(node);
+    setSelectedSidebar(node);
+    updateInputEl.current.focus();
+
     // // const value = updateInputEl.current.value;
+
     let newNode = {
       id: node.id,
       title: newTitle,
@@ -137,41 +141,39 @@ const Tree = ({ data, fetchSidebars }) => {
     setTreeData(newTree);
   };
 
-  const addNodeChild = (rowInfo) => {
+  const selectedAddNodeChild = (rowInfo) => {
     let { node, path } = rowInfo;
     const value = inputChildEl.current.value;
-    // const value = inputEls.current[treeIndex].current.value;
+    setSelectedNodeParent(rowInfo);
 
-    if (value === "") {
-      inputChildEl.current.focus();
-      // inputEls.current[treeIndex].current.focus();
-      return;
-    }
+    inputChildEl.current.focus();
+  };
+
+  const addNodeChild = () => {
+    const value = inputChildEl.current.value;
+
     let addNodeChild = [];
 
     addNodeChild.push({
-      parentId: node.id,
+      parentId: selectedNodeParent.node.id,
       title: value,
       expanded: true,
     });
-
     let newTree = addNodeUnderParent({
       treeData: treeData,
-      parentKey: path[path.length - 1],
+      parentKey: selectedNodeParent.path[selectedNodeParent.path.length - 1],
       expandParent: true,
       getNodeKey,
       newNode: {
-        parentId: rowInfo.node.id,
+        parentId: selectedNodeParent.node.id,
         title: value,
       },
     });
     setTreeDataAddNodeChild(addNodeChild);
-    console.log("newTree.treeData", newTree.treeData);
     setTreeData(newTree.treeData);
 
     inputChildEl.current.value = "";
     // inputEls.current[treeIndex].current.value = "";
-    console.log("treeDataAddNodeChild", treeDataAddNodeChild);
   };
 
   // const addNodeSibling = (rowInfo) => {
@@ -222,8 +224,8 @@ const Tree = ({ data, fetchSidebars }) => {
     let arrRemoveNode = [];
     const path = rowInfoDelete ? rowInfoDelete.path : null;
     arrRemoveNode.push(rowInfoDelete.node);
-    const a = deParseData(arrRemoveNode, []);
-    setTreeDataRemoveNode(a);
+    const nodeRemove = deParseData(arrRemoveNode, []);
+    setTreeDataRemoveNode(nodeRemove);
     setTreeData(
       removeNodeAtPath({
         treeData,
@@ -301,7 +303,7 @@ const Tree = ({ data, fetchSidebars }) => {
         selectPrevMatch={selectPrevMatch}
         searchFocusIndex={searchFocusIndex}
         treeData={treeData}
-        selectedSideBar={selectedSideBar}
+        selectedSidebar={selectedSidebar}
         fetchSidebars={fetchSidebars}
         treeDataUpdate={treeDataUpdate}
         treeDataUpdateAll={treeDataUpdateAll}
@@ -309,6 +311,7 @@ const Tree = ({ data, fetchSidebars }) => {
         treeDataRemoveNode={treeDataRemoveNode}
         treeDataAddNode={treeDataAddNode}
         treeDataAddNodeChild={treeDataAddNodeChild}
+        selectedNodeParent={selectedNodeParent}
       />
 
       <div
@@ -321,7 +324,6 @@ const Tree = ({ data, fetchSidebars }) => {
             onMoveNode={(treeData) => {
               setTreeDataUpdateAll(treeData.treeData);
               let treeUpdateArr = [...treeDataUpdate];
-              console.log("treeUpdateArr", treeUpdateArr);
               let node = treeData.node;
               node.parentId = treeData.nextParentNode
                 ? treeData.nextParentNode.id
@@ -369,7 +371,7 @@ const Tree = ({ data, fetchSidebars }) => {
                     id="addChildEl"
                     className="px-2 py-1 mx-2 text-sky-400 border-2 border-sky-400 hover:text-white hover:bg-sky-500 hover:border-sky-500 rounded-full transition-primary"
                     label="Add Child"
-                    onClick={(event) => addNodeChild(rowInfo)}
+                    onClick={(event) => selectedAddNodeChild(rowInfo)}
                   >
                     <i className="fa-solid fa-plus"></i>
                   </button>
@@ -377,7 +379,7 @@ const Tree = ({ data, fetchSidebars }) => {
                     id="updateEl"
                     className="px-2 py-1 mx-2 text-sky-400 border-2 border-sky-400 hover:text-white hover:bg-sky-500 hover:border-sky-500 rounded-full transition-primary"
                     label="Update"
-                    onClick={(event) => setSelectedSideBar(rowInfo)}
+                    onClick={(event) => setSelectedSidebar(rowInfo)}
                   >
                     <i className="fa-regular fa-pen-to-square"></i>
                   </button>
