@@ -288,7 +288,11 @@ const Tree = ({ data, fetchSidebars }) => {
       searchFocusIndex !== null ? (searchFocusIndex + 1) % searchFoundCount : 0
     );
   };
-
+  const hiDiv = document.getElementById("hi");
+  const helloDiv = document.getElementsByClassName("hello");
+  for (let i = 0; i < helloDiv.length; i++) {
+    helloDiv[i].classList.add("hello-world");
+  }
   return (
     <div className="ml-10">
       <HeaderSidebarManagement
@@ -316,6 +320,7 @@ const Tree = ({ data, fetchSidebars }) => {
         treeDataAddNode={treeDataAddNode}
         treeDataAddNodeChild={treeDataAddNodeChild}
         selectedNodeParent={selectedNodeParent}
+        setTreeDataUpdate={setTreeDataUpdate}
       />
 
       <div
@@ -328,6 +333,7 @@ const Tree = ({ data, fetchSidebars }) => {
             onMoveNode={(treeData) => {
               setTreeDataUpdateAll(treeData.treeData);
               let treeUpdateArr = [...treeDataUpdate];
+              console.log("treeUpdateArr", treeUpdateArr);
               let node = treeData.node;
               node.parentId = treeData.nextParentNode
                 ? treeData.nextParentNode.id
@@ -349,72 +355,72 @@ const Tree = ({ data, fetchSidebars }) => {
             }}
             canDrag={({ node }) => !node.dragDisabled}
             onDragStateChanged={(node) => {}}
-            generateNodeProps={(rowInfo) => ({
-              // title: rowInfo.node.label,
-              // subtitle: rowInfo.node.subTitle,
-              buttons: [
-                <div className="text-sm">
-                  {/* <button
-                  id="addSiblingEl"
-                  className="px-2 py-1 mx-2 text-white bg-blue-400 hover:bg-blue-500 rounded-md transition-primary"
-                  label="Add Sibling"
-                  onClick={(event) => addNodeSibling(rowInfo)}
-                >
-                  Add Sibling
-                </button>   
-                <button
-                  id="addChildEl"
-                  className="px-2 py-1 mx-2 text-white bg-blue-400 hover:bg-blue-500 rounded-full transition-primary"
-                  label="Add Child"
-                  onClick={(event) => addNodeChild(rowInfo)}
-                >
-                  <i className="fa-solid fa-plus"></i>
-                </button> */}
+            generateNodeProps={(rowInfo) => {
+              // console.log("rowInfo", rowInfo);
+              const moveHandle =
+                document.getElementsByClassName("rst__moveHandle");
+              let x = rowInfo.node;
 
-                  <button
-                    id="addChildEl"
-                    className="px-2 py-1 mx-2 text-sky-400 border-2 border-sky-400 hover:text-white hover:bg-sky-500 hover:border-sky-500 rounded-full transition-primary"
-                    label="Add Child"
-                    onClick={(event) => selectedAddNodeChild(rowInfo)}
-                  >
-                    <i className="fa-solid fa-plus"></i>
-                  </button>
-                  <button
-                    id="updateEl"
-                    className="px-2 py-1 mx-2 text-sky-400 border-2 border-sky-400 hover:text-white hover:bg-sky-500 hover:border-sky-500 rounded-full transition-primary"
-                    label="Update"
-                    onClick={(event) => setSelectedSidebar(rowInfo)}
-                  >
-                    <i className="fa-regular fa-pen-to-square"></i>
-                  </button>
-                  <button
-                    id="deleteEl"
-                    className="px-2 py-1 mx-2 text-red-400 border-2 border-red-400 hover:text-white hover:bg-red-500 hover:border-red-500 rounded-full transition-primary"
-                    label="Delete"
-                    onClick={(event) => handleOpenFormDelete(rowInfo)}
-                    // onClick={(event) => removeNode(rowInfo)}
-                  >
-                    <i className="fa-sharp fa-solid fa-trash"></i>
-                  </button>
-                  <button
-                    className="px-2 py-1 mx-2 text-sky-400 border-2 border-sky-400 hover:text-white hover:bg-sky-500 hover:border-sky-500 rounded-full transition-primary"
-                    label="Alert"
-                    onClick={(event) => alertNodeInfo(rowInfo)}
-                  >
-                    <i className="fa-sharp fa-solid fa-circle-info"></i>
-                  </button>
-                </div>,
-                <SidebarFormDelete
-                  removeNode={removeNode}
-                  rowInfoDelete={rowInfoDelete}
-                  onCloseFormDelete={handleCloseFormDelete}
-                  isOpenFormDelete={isOpenFormDelete}
-                />,
-              ],
-              style: {
-                height: "50px",
-              },
-            })}
+              if (x.parentId === null) {
+                console.log("kiki", moveHandle[rowInfo.treeIndex]);
+                // moveHandle[rowInfo.treeIndex].classList.add("moveHandleEdit");
+              } else {
+                // moveHandle[rowInfo.treeIndex].classList.remove(
+                //   "moveHandleEdit"
+                // );
+              }
+
+              return {
+                // title: rowInfo.node.label,
+                // subtitle: rowInfo.node.subTitle,
+
+                buttons: [
+                  <div className="text-sm">
+                    <button
+                      id="addChildEl"
+                      className="px-2 py-1 mx-2 text-sky-400 border-2 border-sky-400 hover:text-white hover:bg-sky-500 hover:border-sky-500 rounded-full transition-primary"
+                      label="Add Child"
+                      onClick={(event) => selectedAddNodeChild(rowInfo)}
+                    >
+                      <i className="fa-solid fa-plus"></i>
+                    </button>
+                    <button
+                      id="updateEl"
+                      className="px-2 py-1 mx-2 text-sky-400 border-2 border-sky-400 hover:text-white hover:bg-sky-500 hover:border-sky-500 rounded-full transition-primary"
+                      label="Update"
+                      onClick={(event) => setSelectedSidebar(rowInfo)}
+                    >
+                      <i className="fa-regular fa-pen-to-square"></i>
+                    </button>
+                    <button
+                      id="deleteEl"
+                      className="px-2 py-1 mx-2 text-red-400 border-2 border-red-400 hover:text-white hover:bg-red-500 hover:border-red-500 rounded-full transition-primary"
+                      label="Delete"
+                      onClick={(event) => handleOpenFormDelete(rowInfo)}
+                      // onClick={(event) => removeNode(rowInfo)}
+                    >
+                      <i className="fa-sharp fa-solid fa-trash"></i>
+                    </button>
+                    <button
+                      className="px-2 py-1 mx-2 text-sky-400 border-2 border-sky-400 hover:text-white hover:bg-sky-500 hover:border-sky-500 rounded-full transition-primary"
+                      label="Alert"
+                      onClick={(event) => alertNodeInfo(rowInfo)}
+                    >
+                      <i className="fa-sharp fa-solid fa-circle-info"></i>
+                    </button>
+                  </div>,
+                  <SidebarFormDelete
+                    removeNode={removeNode}
+                    rowInfoDelete={rowInfoDelete}
+                    onCloseFormDelete={handleCloseFormDelete}
+                    isOpenFormDelete={isOpenFormDelete}
+                  />,
+                ],
+                style: {
+                  height: "90px; !important",
+                },
+              };
+            }}
             // ...
           />
         ) : (

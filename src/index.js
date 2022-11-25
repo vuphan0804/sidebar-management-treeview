@@ -8,6 +8,8 @@ import Header from "./components/header/Header";
 import { sidebarAPI } from "./api/sidebarAPI";
 import { BrowserRouter } from "react-router-dom";
 import _ from "lodash";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import ScrollButton from "./components/scrollToTop/ScrollButton";
 
 const App = () => {
@@ -33,8 +35,6 @@ const App = () => {
     const childArr = _.sortBy(treeData, ["count"]).filter(
       (a) => a.parentId !== null
     );
-    console.log("parentArr", parentArr);
-    console.log("childArr", childArr);
     setTreeDataParse(parseData(parentArr, childArr));
   }, [treeData]);
 
@@ -70,6 +70,7 @@ const App = () => {
           </div>
         </div>
         <ScrollButton />
+        <ToastContainer autoClose={2000} />
       </div>
     </BrowserRouter>
   );

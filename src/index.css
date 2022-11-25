@@ -11,3 +11,7 @@
 .bg-sidebar {
   background-color: rgb(249, 249, 249, 0.7);
 }
+
+.moveHandleEdit {
+  background-color: red !important;
+}

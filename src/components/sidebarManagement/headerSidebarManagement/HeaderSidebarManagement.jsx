@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { sidebarAPI } from "../../../api/sidebarAPI";
+import { toast } from "react-toastify";
 
 const HeaderSidebarManagement = ({
   inputEl,
@@ -26,11 +27,12 @@ const HeaderSidebarManagement = ({
   treeDataAddNodeChild,
   treeDataRemoveNode,
   selectedNodeParent,
+  setTreeDataUpdate,
 }) => {
   const [updateSidebar, setUpdateSidebar] = useState(selectedSidebar); //rowInfo
   const [input, setInput] = useState("");
   const [originalDataAll, setOriginalDataAll] = useState([]);
-  // const [originalDataUpdate, setOriginalDataUpdate] = useState([]);
+  const [originalDataUpdate, setOriginalDataUpdate] = useState([]);
   const [addNodeChildSidebar, setAddNodeChildSidebar] =
     useState(selectedNodeParent);
   const [inputAddNodeChild, setInputAddNodeChild] = useState("");
@@ -68,6 +70,19 @@ const HeaderSidebarManagement = ({
   useEffect(() => {
     callbackRemoveNode();
   }, [treeDataRemoveNode]);
+
+  const showToastMessageSuccess = () => {
+    toast.success("Success Notification !", {
+      position: toast.POSITION.TOP_RIGHT,
+    });
+  };
+
+  const showToastMessageError = () => {
+    toast.error("Error Notification !", {
+      position: toast.POSITION.TOP_RIGHT,
+    });
+  };
+
   // Transfer Data
   const deParseData = (treeData, data) => {
     treeData?.forEach((parent, index) => {
@@ -96,7 +111,9 @@ const HeaderSidebarManagement = ({
         .filter((e) => mockApiIds.includes(e.id))
         .map(async (e) => await sidebarAPI.updateSidebar(e.id, e))
     )
+      .then(() => showToastMessageSuccess())
       .then((msgSuccess) => fetchSidebars())
+      .catch(() => showToastMessageError())
       .catch((error) => console.log("error", error));
 
     console.log("mockApiIds", mockApiIds);
@@ -108,12 +125,14 @@ const HeaderSidebarManagement = ({
   //   // Update sidebars
   //   Promise.all(
   //     originalDataUpdate
+  //       .then(() => showToastMessageSuccess())
   //       .filter((e) => mockApiIds.includes(e.id))
+  //       .catch(() => showToastMessageError())
   //       .map(async (e) => await sidebarAPI.updateSidebar(e.id, e))
   //   )
   //     .then((msgSuccess) => fetchSidebars())
   //     .catch((error) => console.log("error", error));
-
+  //   setTreeDataUpdate([]);
   //   console.log("mockApiIds", mockApiIds);
   // };
 
@@ -121,7 +140,9 @@ const HeaderSidebarManagement = ({
     Promise.all(
       treeDataAddNode.map(async (e) => await sidebarAPI.addSidebar(e))
     )
+      .then(() => showToastMessageSuccess())
       .then((msgSuccess) => fetchSidebars())
+      .catch(() => showToastMessageError())
       .catch((error) => console.log("error", error));
   }, [treeDataAddNode]);
 
@@ -145,7 +166,9 @@ const HeaderSidebarManagement = ({
     Promise.all(
       treeDataAddNodeChild.map(async (e) => await sidebarAPI.addSidebar(e))
     )
+      .then(() => showToastMessageSuccess())
       .then((msgSuccess) => fetchSidebars())
+      .catch(() => showToastMessageError())
       .catch((error) => console.log("error", error));
   }, [treeDataAddNodeChild]);
 
@@ -171,7 +194,9 @@ const HeaderSidebarManagement = ({
     };
     await sidebarAPI
       .updateSidebar(nodeUpdate.id, nodeUpdate)
+      .then(() => showToastMessageSuccess())
       .then((msgSuccess) => fetchSidebars())
+      .catch(() => showToastMessageError())
       .catch((error) => console.log("error", error));
   }, [treeDataUpdateNode]);
 
@@ -179,7 +204,9 @@ const HeaderSidebarManagement = ({
     Promise.all(
       treeDataRemoveNode.map(async (e) => await sidebarAPI.deleteSidebar(e.id))
     )
+      .then(() => showToastMessageSuccess())
       .then((msgSuccess) => fetchSidebars())
+      .catch(() => showToastMessageError())
       .catch((error) => console.log("error", error));
   }, [treeDataRemoveNode]);
 
@@ -189,7 +216,7 @@ const HeaderSidebarManagement = ({
 
   return (
     <div className="mt-32" style={{ flex: "0 0 auto", padding: "0 15px" }}>
-      <h3 className="text-3xl font-medium text-center mb-5">
+      <h3 className="text-3xl hello font-medium text-center mb-5">
         Sidebar Management
       </h3>
       <div className="grid grid-cols-2">
