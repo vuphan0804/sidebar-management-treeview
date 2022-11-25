@@ -71,14 +71,14 @@ const HeaderSidebarManagement = ({
     callbackRemoveNode();
   }, [treeDataRemoveNode]);
 
-  const showToastMessageSuccess = () => {
-    toast.success("Success Notification !", {
+  const showToastMessageSuccess = (msg = "Success") => {
+    toast.success(msg, {
       position: toast.POSITION.TOP_RIGHT,
     });
   };
 
-  const showToastMessageError = () => {
-    toast.error("Error Notification !", {
+  const showToastMessageError = (msg = "Error") => {
+    toast.error(msg, {
       position: toast.POSITION.TOP_RIGHT,
     });
   };
@@ -111,7 +111,7 @@ const HeaderSidebarManagement = ({
         .filter((e) => mockApiIds.includes(e.id))
         .map(async (e) => await sidebarAPI.updateSidebar(e.id, e))
     )
-      .then(() => showToastMessageSuccess())
+      .then(() => showToastMessageSuccess("Save"))
       .then((msgSuccess) => fetchSidebars())
       .catch(() => showToastMessageError())
       .catch((error) => console.log("error", error));
@@ -140,7 +140,7 @@ const HeaderSidebarManagement = ({
     Promise.all(
       treeDataAddNode.map(async (e) => await sidebarAPI.addSidebar(e))
     )
-      .then(() => showToastMessageSuccess())
+      .then(() => showToastMessageSuccess("Add Node"))
       .then((msgSuccess) => fetchSidebars())
       .catch(() => showToastMessageError())
       .catch((error) => console.log("error", error));
@@ -166,7 +166,7 @@ const HeaderSidebarManagement = ({
     Promise.all(
       treeDataAddNodeChild.map(async (e) => await sidebarAPI.addSidebar(e))
     )
-      .then(() => showToastMessageSuccess())
+      .then(() => showToastMessageSuccess("Add Node Child"))
       .then((msgSuccess) => fetchSidebars())
       .catch(() => showToastMessageError())
       .catch((error) => console.log("error", error));
@@ -194,7 +194,7 @@ const HeaderSidebarManagement = ({
     };
     await sidebarAPI
       .updateSidebar(nodeUpdate.id, nodeUpdate)
-      .then(() => showToastMessageSuccess())
+      .then(() => showToastMessageSuccess("Update Node"))
       .then((msgSuccess) => fetchSidebars())
       .catch(() => showToastMessageError())
       .catch((error) => console.log("error", error));
@@ -204,7 +204,7 @@ const HeaderSidebarManagement = ({
     Promise.all(
       treeDataRemoveNode.map(async (e) => await sidebarAPI.deleteSidebar(e.id))
     )
-      .then(() => showToastMessageSuccess())
+      .then(() => showToastMessageSuccess("Remove Node"))
       .then((msgSuccess) => fetchSidebars())
       .catch(() => showToastMessageError())
       .catch((error) => console.log("error", error));

@@ -363,11 +363,13 @@ const Tree = ({ data, fetchSidebars }) => {
 
               if (x.parentId === null) {
                 console.log("kiki", moveHandle[rowInfo.treeIndex]);
-                // moveHandle[rowInfo.treeIndex].classList.add("moveHandleEdit");
+                if (moveHandle[rowInfo.treeIndex])
+                  moveHandle[rowInfo.treeIndex].classList.add("moveHandleEdit");
               } else {
-                // moveHandle[rowInfo.treeIndex].classList.remove(
-                //   "moveHandleEdit"
-                // );
+                if (moveHandle[rowInfo.treeIndex])
+                  moveHandle[rowInfo.treeIndex].classList.remove(
+                    "moveHandleEdit"
+                  );
               }
 
               return {
