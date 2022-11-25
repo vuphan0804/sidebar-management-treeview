@@ -50,6 +50,11 @@ const Tree = ({ data, fetchSidebars }) => {
       }, 2000);
     } else setIsLoading(true);
   }, [treeData]);
+  // useEffect(() => {
+  //   const moveHandle = document.querySelectorAll(".rst__moveHandle");
+
+  //   moveHandle.style.background = "red";
+  // }, []);
 
   const handleOpenForm = () => {
     setIsOpen(true);
@@ -105,7 +110,6 @@ const Tree = ({ data, fetchSidebars }) => {
     // handleOpenForm();
     inputEl.current.value = "";
   };
-
   const updateNode = (rowInfo, newTitle) => {
     if (!rowInfo) return;
 

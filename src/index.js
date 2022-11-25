@@ -8,6 +8,7 @@ import Header from "./components/header/Header";
 import { sidebarAPI } from "./api/sidebarAPI";
 import { BrowserRouter } from "react-router-dom";
 import _ from "lodash";
+import ScrollButton from "./components/scrollToTop/ScrollButton";
 
 const App = () => {
   const [treeData, setTreeData] = useState([]);
@@ -68,6 +69,7 @@ const App = () => {
             <Tree fetchSidebars={fetchSidebars} data={treeDataParse} />
           </div>
         </div>
+        <ScrollButton />
       </div>
     </BrowserRouter>
   );

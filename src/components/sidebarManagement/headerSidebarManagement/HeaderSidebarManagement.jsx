@@ -183,6 +183,10 @@ const HeaderSidebarManagement = ({
       .catch((error) => console.log("error", error));
   }, [treeDataRemoveNode]);
 
+  const reloadPage = () => {
+    window.location.reload();
+  };
+
   return (
     <div className="mt-32" style={{ flex: "0 0 auto", padding: "0 15px" }}>
       <h3 className="text-3xl font-medium text-center mb-5">
@@ -233,6 +237,16 @@ const HeaderSidebarManagement = ({
             value={input}
             onChange={(e) => setInput(e.target.value)}
           />
+          <br />
+        </div>
+        <div className="flex">
+          <button
+            className="p-2 m-2 bg-gray-200 rounded-md hover:bg-gray-400 transition-primary"
+            onClick={reloadPage}
+          >
+            Refresh Page
+          </button>
+
           <br />
         </div>
       </div>
