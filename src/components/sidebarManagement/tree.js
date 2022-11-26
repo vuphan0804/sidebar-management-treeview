@@ -362,13 +362,14 @@ const Tree = ({ data, fetchSidebars }) => {
               let x = rowInfo.node;
 
               if (x.parentId === null) {
-                console.log("kiki", moveHandle[rowInfo.treeIndex]);
                 if (moveHandle[rowInfo.treeIndex])
-                  moveHandle[rowInfo.treeIndex].classList.add("moveHandleEdit");
+                  moveHandle[rowInfo.treeIndex].classList.add(
+                    "moveHandleParent"
+                  );
               } else {
                 if (moveHandle[rowInfo.treeIndex])
                   moveHandle[rowInfo.treeIndex].classList.remove(
-                    "moveHandleEdit"
+                    "moveHandleParent"
                   );
               }
 
