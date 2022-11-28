@@ -12,6 +12,7 @@ import SidebarForm from "./sidebarForm/SidebarForm";
 import SidebarFormDelete from "./sidebarForm/SidebarFormDelete.jsx";
 import SidebarPopupInfo from "./sidebarForm/SidebarPopupInfo";
 import TreeManagement from "./treeManagement/TreeManagement";
+import icons from "../../dataIcons/icons";
 
 const Tree = ({ data, fetchSidebars }) => {
   const [searchString, setSearchString] = useState("");
@@ -359,18 +360,24 @@ const Tree = ({ data, fetchSidebars }) => {
               // console.log("rowInfo", rowInfo);
               const moveHandle =
                 document.getElementsByClassName("rst__moveHandle");
-              let x = rowInfo.node;
 
-              if (x.parentId === null) {
-                if (moveHandle[rowInfo.treeIndex])
-                  moveHandle[rowInfo.treeIndex].classList.add(
-                    "moveHandleParent"
-                  );
-              } else {
-                if (moveHandle[rowInfo.treeIndex])
-                  moveHandle[rowInfo.treeIndex].classList.remove(
-                    "moveHandleParent"
-                  );
+              let path = rowInfo.path;
+
+              if (moveHandle[rowInfo.treeIndex]) {
+                if (path.length <= icons.length) {
+                  for (let i = 0; i <= path.length; i++) {
+                    moveHandle[
+                      rowInfo.treeIndex
+                    ].style.background = `#d9d9d9  url(/img/${
+                      icons[i - 1]
+                    }) no-repeat center`;
+                  }
+                } else {
+                  moveHandle[
+                    rowInfo.treeIndex
+                  ].style.background = `#d9d9d9  url(/img/menu1.png
+                  ) no-repeat center`;
+                }
               }
 
               return {
